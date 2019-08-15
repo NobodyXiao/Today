@@ -9,7 +9,6 @@ export default {
   name: 'DiaryBook',
   data () {
     return {
-      msg: 'white down your diary here every'
     }
   }
 }

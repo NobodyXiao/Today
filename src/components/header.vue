@@ -9,7 +9,6 @@ export default {
   name: 'Header',
   data () {
     return {
-      msg: 'there will be some date component'
     }
   }
 }

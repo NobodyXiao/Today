@@ -9,7 +9,6 @@ export default {
   name: 'CashBook',
   data () {
     return {
-      msg: 'record your revenues and expenses here'
     }
   }
 }
