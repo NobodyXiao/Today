@@ -1,19 +1,48 @@
-<template>
-  <div class="menu_container">
-    here is a container that contain task, diary and cashBook components
-  </div>
-</template>
+import Vue from 'vue'
+import Router from 'vue-router'
+import MenuContainer from '@/components/menuContainer'
+import TaskList from '@/components/taskList'
+import CashBook from '@/components/cashBook'
+import DiaryBook from '@/components/diaryBook'
+import Setting from '@/components/setting'
+import ErrorPage from '@/components/errorPage'
+import MainPage from '@/components/mainPage'
 
-<script>
-export default {
-  name: 'MenuContainer',
-  data () {
-    return {
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/:id',
+      name: 'mainPage',
+      component: MainPage,
+      children: [
+        {
+          path: 'task',
+          name: 'taskList',
+          component: TaskList
+        },
+        {
+          path: '/account/:id',
+          name: 'cashBook',
+          component: CashBook
+        },
+        {
+          path: '/diary/:id',
+          name: 'diaryBook',
+          component: DiaryBook
+        },
+        {
+          path: '/setting/:id',
+          name: 'setting',
+          component: Setting
+        }
+      ]
+    },
+    {
+      path: '*',
+      name: 'errorPage',
+      component: ErrorPage
     }
-  }
-}
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+  ]
+})
