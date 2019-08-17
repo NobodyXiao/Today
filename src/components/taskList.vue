@@ -1,6 +1,10 @@
 <template>
   <div class="task_list">
-    <el-table stripe :data="tableData" style="width: calc(100% - 40px); height:100%;">
+    <div class="task_list_operator">
+      <img src="@/assets/images/add.png" @click="createTask()">
+      <img src="@/assets/images/search.png" @click="searchTask()">
+    </div>
+    <el-table stripe :data="tableData" style="width: calc(100% - 40px);" height="calc(100% - 110px  )">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-input style="width: calc(100% - 140px);margin-left: 100px;" type="textarea" v-model="props.row.remarks" :autosize=true></el-input>
@@ -11,7 +15,7 @@
           <el-checkbox :checked="Boolean(scope.row.status)" @change="taskStatusChange($event, scope.$index)"></el-checkbox>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="任务描述">
+      <el-table-column prop="description" label="任务描述" min-width="300">
       </el-table-column>
       <el-table-column prop="creatTime" label="创建时间" width="300">
       </el-table-column>
@@ -50,6 +54,7 @@ export default {
       activeDes: '',
       isDisableToSave: true,
       emptyTextError: false,
+      isCreateTask: false,
       tableData: [
         {
           creatTime: '2016-05-03',
@@ -106,10 +111,14 @@ export default {
     },
     // 弹出框文本发生变化时，更改save按钮的状态
     textChange: function () {
+      let descriptionOrg = ''
+      if (this.tableData[this.activeTaskIndex]) {
+        descriptionOrg = this.tableData[this.activeTaskIndex].description
+      }
       if (this.activeDes === '') {
         this.isDisableToSave = true
         this.emptyTextError = true
-      } else if (this.activeDes !== this.tableData[this.activeTaskIndex].description) {
+      } else if (this.activeDes !== descriptionOrg) {
         this.isDisableToSave = false
         this.emptyTextError = false
       } else {
@@ -127,6 +136,25 @@ export default {
     closeDialog: function () {
       this.isDisableToSave = true
       this.emptyTextError = false
+      if (this.isCreateTask === true) {
+        this.isCreateTask = false
+        let currentTime = new Date()
+        this.tableData.push({
+          creatTime: currentTime,
+          description: this.activeDes,
+          status: 0,
+          remarks: ''
+        })
+      } else {
+        this.tableData[this.activeTaskIndex].description = this.activeDes
+      }
+    },
+    createTask: function () {
+      this.isCreateTask = true
+      this.dialogVisible = true
+      this.activeDes = ''
+    },
+    searchTask: function () {
     }
   }
 }
@@ -155,5 +183,22 @@ export default {
   }
   .empty_text {
     border: 1px solid red;
+  }
+  .task_list_operator {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: calc(100% - 40px);
+    height: 60px;
+    padding-left: 20px;
+    box-sizing: border-box;
+  }
+  .task_list_operator img {
+    height: 30px;
+    cursor: pointer;
+  }
+  .task_list_operator img+img {
+    margin-left: 30px;
   }
 </style>
