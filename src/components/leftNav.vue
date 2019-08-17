@@ -1,7 +1,7 @@
 <template>
   <div class="leaf_nav">
     <div class="avatar">
-      <img :src="require('../assets/avatar.png')" alt="avatar">
+      <img :src="require('../assets/images/avatar.png')" alt="avatar">
     </div>
     <ul class="menu">
       <li v-for="(item, index) of menuList" :key="index" @click="changeRouter(item,index)" :class="{'active': activeIndex === index}">

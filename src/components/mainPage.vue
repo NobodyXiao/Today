@@ -36,7 +36,6 @@ export default {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2C3E50;
   }
   .main_page .leaf_nav {
@@ -46,7 +45,7 @@ export default {
   }
   .main_page .content_wrapper{
     height: 100%;
-    flex: 1;
+    width: calc(100% - 120px);
   }
   .main_page .header {
     background: #FFFFFF;
