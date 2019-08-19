@@ -4,7 +4,7 @@
       <img src="@/assets/images/add.png" @click="createTask()">
       <img src="@/assets/images/search.png" @click="searchTask()">
     </div>
-    <el-table stripe :data="tableData" style="width: calc(100% - 40px);" height="calc(100% - 110px  )">
+    <el-table stripe :data="tableData" style="width: 100%;" height="calc(100% - 110px)">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-input style="width: calc(100% - 140px);margin-left: 100px;" type="textarea" v-model="props.row.remarks" :autosize=true></el-input>
@@ -15,9 +15,12 @@
           <el-checkbox :checked="Boolean(scope.row.status)" @change="taskStatusChange($event, scope.$index)"></el-checkbox>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="任务描述" min-width="300">
+      <el-table-column prop="des" label="任务描述" min-width="300">
       </el-table-column>
       <el-table-column prop="creatTime" label="创建时间" width="300">
+        <template slot-scope="scope">
+          <div>{{scope.row.creatTime | dateFilter}}</div>
+        </template>
       </el-table-column>
       <el-table-column prop="status" label="完成状态" width="180">
         <template slot-scope="scope">
@@ -33,72 +36,94 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="任务内容" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" @close="closeDialog()">
-      <span style="color:red;" v-if="emptyTextError">任务内容不能为空</span>
-      <el-input type="textarea" v-model="activeDes" :autosize=true @change="textChange()" :class="{'empty_text':emptyTextError}"></el-input>
+    <el-dialog title="新建任务" :close-on-click-modal="false" :visible.sync="dialogVisible" width="30%" @close="closeDialog()">
+      <el-form :model="taskForm" :rules="rules" ref="taskForm" label-width="60px">
+        <el-form-item label="内容" prop="des">
+          <el-input v-model="taskForm.des" @input="rulsFormValidate('taskForm')"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" :disabled="isDisableToSave" @click="dialogVisible = false">保存</el-button>
+        <el-button type="primary" :disabled="isDisableToSave" @click="saveTask()" >保存</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js'
 export default {
   name: 'TaskList',
   data () {
     return {
       dialogVisible: false,
       activeTaskIndex: -1,
-      activeDes: '',
       isDisableToSave: true,
-      emptyTextError: false,
       isCreateTask: false,
       tableData: [
         {
           creatTime: '2016-05-03',
-          description: '回家写作业1',
+          des: '回家写作业1',
           status: 1,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业2',
+          des: '回家写作业2',
           status: 1,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业3',
+          des: '回家写作业3',
           status: 0,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业6',
+          des: '回家写作业6',
           status: 0,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业4',
+          des: '回家写作业4',
           status: 0,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业7',
+          des: '回家写作业7',
           status: 0,
           remarks: ''
         }, {
           creatTime: '2016-05-03',
-          description: '回家写作业5',
+          des: '回家写作业5',
           status: 1,
           remarks: ''
-        }]
+        }],
+      taskForm: {
+        des: ''
+      },
+      rules: {
+        des: [
+          {required: true, message: '请填写任务内容'}
+        ]
+      }
     }
   },
   methods: {
+    createTask: function () {
+      this.taskForm = {
+        des: ''
+      }
+      this.dialogVisible = true
+      this.isCreateTask = true
+      // 避免上来就校验
+      setTimeout(() => {
+        this.$refs['taskForm'].clearValidate()
+      })
+    },
     // 编辑当前任务的描述信息
     editTask: function (rowIndex) {
+      let editData = this.tableData[rowIndex]
+      this.taskForm.des = editData['des']
       this.dialogVisible = true
-      this.activeDes = this.tableData[rowIndex].description
       this.activeTaskIndex = rowIndex
     },
     // 删除当前任务
@@ -109,53 +134,43 @@ export default {
     taskStatusChange: function (event, rowIndex) {
       event ? this.tableData[rowIndex].status = 1 : this.tableData[rowIndex].status = 0
     },
-    // 弹出框文本发生变化时，更改save按钮的状态
-    textChange: function () {
-      let descriptionOrg = ''
-      if (this.tableData[this.activeTaskIndex]) {
-        descriptionOrg = this.tableData[this.activeTaskIndex].description
-      }
-      if (this.activeDes === '') {
-        this.isDisableToSave = true
-        this.emptyTextError = true
-      } else if (this.activeDes !== descriptionOrg) {
-        this.isDisableToSave = false
-        this.emptyTextError = false
-      } else {
-        this.isDisableToSave = true
-        this.emptyTextError = false
-      }
-    },
-    handleClose: function (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
     closeDialog: function () {
       this.isDisableToSave = true
-      this.emptyTextError = false
+      this.isCreateTask = false
+      this.activeTaskIndex = -1
+    },
+    saveTask: function () {
+      let currentTime = new Date()
       if (this.isCreateTask === true) {
         this.isCreateTask = false
-        let currentTime = new Date()
         this.tableData.push({
           creatTime: currentTime,
-          description: this.activeDes,
+          des: this.taskForm.des,
           status: 0,
           remarks: ''
         })
       } else {
-        this.tableData[this.activeTaskIndex].description = this.activeDes
+        this.tableData[this.activeTaskIndex].des = this.taskForm.des
+        this.tableData[this.activeTaskIndex].creatTime = currentTime
       }
-    },
-    createTask: function () {
-      this.isCreateTask = true
-      this.dialogVisible = true
-      this.activeDes = ''
+      this.dialogVisible = false
     },
     searchTask: function () {
+    },
+    rulsFormValidate: function (formName) {
+      this.$nextTick(() => {
+        this.$refs[formName].validate((valid) => {
+          if (!valid) {
+            this.isDisableToSave = true
+          } else {
+            this.isDisableToSave = false
+          }
+        })
+      })
     }
+  },
+  mounted () {
+    eventBus.$emit('leafNavChange', 0)
   }
 }
 </script>
@@ -167,6 +182,7 @@ export default {
     width: 100%;
     padding: 0 20px;
     overflow: hidden;
+    box-sizing: border-box;
   }
   .operator {
     display: flex;
@@ -180,9 +196,6 @@ export default {
   }
   .operator img+img {
     margin-left: 10px;
-  }
-  .empty_text {
-    border: 1px solid red;
   }
   .task_list_operator {
     display: flex;

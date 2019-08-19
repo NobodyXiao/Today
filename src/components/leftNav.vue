@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js'
 export default {
   name: 'LeafNav',
   data () {
@@ -26,7 +27,7 @@ export default {
           routerPath: '/task'
         },
         {
-          text: '日记',
+          text: '日志',
           url: '../static/images/diary.png',
           routerPath: '/diary'
         },
@@ -49,6 +50,11 @@ export default {
       this.$router.push(`${menuItem.routerPath}/${this.id}`)
       this.activeIndex = index
     }
+  },
+  mounted () {
+    eventBus.$on('leafNavChange', (activeIndex) => {
+      this.activeIndex = activeIndex
+    })
   }
 }
 </script>

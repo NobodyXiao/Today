@@ -5,11 +5,15 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js'
 export default {
   name: 'Setting',
   data () {
     return {
     }
+  },
+  mounted () {
+    eventBus.$emit('leafNavChange', 3)
   }
 }
 </script>
