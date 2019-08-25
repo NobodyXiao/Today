@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column prop="creatTime" label="创建时间" width="300">
         <template slot-scope="scope">
-          <div>{{scope.row.creatTime | dateFilter}}</div>
+          <div>{{scope.row.creatTime | dateFilterWithTime}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="完成状态" width="180">

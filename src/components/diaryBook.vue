@@ -24,7 +24,7 @@
       <div class="diary_list_wrapper">
         <div class="diary_item" v-for="(item, index) of diaryList" :key="index" @click="chooseDiary(index)" :class="{'active': activeIndex === index}">
           <span>{{item.title}}</span>
-          <span style="width:130px;">{{item.createTime | dateFilter}}</span>
+          <span style="width:130px;">{{item.createTime | dateFilterWithTime}}</span>
         </div>
       </div>
     </div>
