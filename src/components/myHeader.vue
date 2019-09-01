@@ -137,6 +137,7 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  border-bottom: 1px solid rgb(229, 229, 229);
 }
 .date_tip {
   min-width: 120px;

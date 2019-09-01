@@ -178,7 +178,7 @@ export default {
     background-color: #e9e9e9;
   }
   .diary_wrapper {
-    padding: 0px 40px 40px;
+    padding: 0px 20px 20px;
     box-sizing: border-box;
     text-align: center;
   }
@@ -212,6 +212,7 @@ export default {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    padding-left: 20px;
   }
   .tool_bar img {
     height: 30px;

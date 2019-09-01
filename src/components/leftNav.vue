@@ -47,8 +47,12 @@ export default {
 
   methods: {
     changeRouter: function (menuItem, index) {
-      this.$router.push(`${menuItem.routerPath}/${this.id}`)
       this.activeIndex = index
+      if (index === this.menuList.length - 1) {
+        this.$router.push(`${menuItem.routerPath}/${this.id}`)
+      } else {
+        this.$router.push(`/record${menuItem.routerPath}/${this.id}`)
+      }
     }
   },
   mounted () {

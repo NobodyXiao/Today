@@ -1,10 +1,7 @@
 <template>
   <div class="main_page">
     <left-nav></left-nav>
-    <section class="content_wrapper">
-      <my-header></my-header>
-      <router-view />
-    </section>
+    <router-view />
   </div>
 </template>
 
