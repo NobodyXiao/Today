@@ -48,7 +48,9 @@ export default {
   methods: {
     resetPassword: function (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {}
+        if (valid) {
+          console.log('可以重置密码')
+        }
       })
     }
   }

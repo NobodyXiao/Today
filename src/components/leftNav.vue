@@ -8,6 +8,10 @@
         <img :src="item.url">
         <span>{{item.text}}</span>
       </li>
+      <li :class="{'active': activeIndex === -1}" @click="logout()">
+        <img src="@/assets/images/logout.png">
+        <span>退出</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -53,6 +57,21 @@ export default {
       } else {
         this.$router.push(`/record${menuItem.routerPath}/${this.id}`)
       }
+    },
+    logout: function () {
+      this.activeIndex = -1
+      this.$confirm('请问您确认要退出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnPressEscape: false,
+        closeOnHashChange: false,
+        closeOnClickModal: false
+      }).then(() => {
+        this.$router.push('/login')
+      }).catch(() => {
+      })
     }
   },
   mounted () {

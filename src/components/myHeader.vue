@@ -93,7 +93,7 @@ export default {
     getMonthFirstDay: function (year, month) {
       return new Date(year, month, 1)
     },
-    getMonDayAndSunDay: function (currentDate) {
+    getMonDayAndSunDay: function () {
       let currentMillisecond = this.currentChooseDate.getTime()
       let day = this.currentChooseDate.getDay()
       day === 0 && (day = 7)
@@ -112,7 +112,7 @@ export default {
       if ([1, 2].includes(this.chooseFlag)) {
         calcDate = this.currentChooseDate
       } else if (this.chooseFlag === 3) {
-        let weekObj = this.getMonDayAndSunDay(this.currentChooseDate)
+        let weekObj = this.getMonDayAndSunDay()
         let year = weekObj.MondayDate.getFullYear()
         let month = this.formatDate(weekObj.MondayDate.getMonth() + 1)
         let monDay = this.formatDate(weekObj.MondayDate.getDate())

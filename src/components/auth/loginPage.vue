@@ -42,7 +42,9 @@ export default {
   methods: {
     login: function (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {}
+        if (valid) {
+          console.log('可以登陆')
+        }
       })
     },
     open: function () {
@@ -56,11 +58,12 @@ export default {
         inputPattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i,
         inputErrorMessage: '邮箱格式不正确'
       }).then(({ value }) => {
+        console.log(value)
       }).catch(() => {
       })
     },
     goToSignUp: function () {
-      this.$router.push(`/sign_up`)
+      this.$router.push('/sign_up')
     }
   }
 }

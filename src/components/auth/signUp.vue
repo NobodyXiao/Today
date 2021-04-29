@@ -4,19 +4,19 @@
       <span style="text-align:center;">请认真填写一下信息，进行注册</span>
     </div>
     <el-form :model="signUpForm" :rules="rules" ref="signUpForm">
-      <el-form-item prop="account">
-        <el-input v-model="signUpForm.account" type="text" placeholder="请填写账号" prefix-icon="el-icon-user"></el-input>
+      <el-form-item prop="username">
+        <el-input v-model="signUpForm.username" type="text" placeholder="请填写账号" prefix-icon="el-icon-user"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="signUpForm.password" type="text" placeholder="请填写密码" prefix-icon="el-icon-lock"></el-input>
       </el-form-item>
-      <el-form-item prop="nickName">
-        <el-input v-model="signUpForm.nickName" type="text" maxlength="30" placeholder="请填写昵称"></el-input>
+      <el-form-item prop="nickname">
+        <el-input v-model="signUpForm.nickname" type="text" maxlength="30" placeholder="请填写昵称"></el-input>
       </el-form-item>
       <el-form-item prop="sex">
         <el-radio-group v-model="signUpForm.sex">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
+          <el-radio label="1">男</el-radio>
+          <el-radio label="2">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="email">
@@ -33,28 +33,32 @@
 
 <script>
 import validatorService from '@/rules.js'
+import axios from 'axios'
+import Qs from 'qs'
 export default {
   name: 'signUp',
   data () {
     return {
       signUpForm: {
-        account: '',
+        username: '',
         password: '',
-        nickName: '',
+        nickname: '',
         sex: null,
         email: '',
         phone: ''
       },
       rules: {
-        account: [
-          { required: true, message: '请填写账号' }
+        username: [
+          { required: true, message: '请填写账号' },
+          { min: 8, max: 100, message: '名字长度在8-100的字符之间' }
         ],
         password: [
           { required: true, message: '请填写密码' },
           { validator: validatorService.FormValidate.Form().validatePsd }
         ],
-        nickName: [
-          { required: true, message: '请填写昵称' }
+        nickname: [
+          { required: true, message: '请填写昵称' },
+          { min: 8, max: 100, message: '昵称长度在8-100的字符之间' }
         ],
         sex: [
           { required: true, message: '请选择性别' }
@@ -72,11 +76,25 @@ export default {
   methods: {
     signUp: function (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {}
+        if (valid) {
+          let postData = {}
+          for (let key in this.signUpForm) {
+            postData[key] = this.signUpForm[key]
+          }
+          axios.post('http://127.0.0.1:3000/user/signup', Qs.stringify(postData),
+          {
+            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+          })
+          .then(res => {
+            console.log('请求成功', res)
+          }, err => {
+            console.log('请求失败', err)
+          })
+        }
       })
     },
     goToLogIn: function () {
-      this.$router.push(`/login`)
+      this.$router.push('/login')
     }
   }
 }

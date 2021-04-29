@@ -1,7 +1,7 @@
 <template>
   <div class="setting">
     <el-tabs v-model="activeName" @tab-click="handleClick" class="el_tabs">
-      <el-tab-pane label="隐私管理" name="first">
+      <el-tab-pane label="密码管理" name="first">
         <password-change :currentTabIndex="currentTabIndex"></password-change>
       </el-tab-pane>
       <el-tab-pane label="个人信息管理" name="second">
@@ -27,7 +27,7 @@ export default {
     eventBus.$emit('leafNavChange', 3)
   },
   methods: {
-    handleClick: function (tab, event) {
+    handleClick: function (tab) {
       tab.paneName === 'first' && (this.currentTabIndex = 1)
       tab.paneName === 'second' && (this.currentTabIndex = 2)
     }

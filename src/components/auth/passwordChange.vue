@@ -69,7 +69,9 @@ export default {
     changePassword: function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log('可以修改密码')
         } else {
+          console.log('不能修改密码')
         }
       })
     },
